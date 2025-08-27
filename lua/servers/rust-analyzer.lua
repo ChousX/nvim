@@ -6,9 +6,15 @@ local on_attach = function(client, bufnr)
 	local opts = { noremap = true, silent = true, buffer = bufnr }
 
 	keymap("n", "K", "<cmd>RustLsp hover actions<CR>", opts)
-	keymap("n", "<leader>ca", "<cmd>RustLsp codeAction<CR>", opts)
+	keymap("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+	--keymap("n", "<leader>ca", "<cmd>RustLsp codeAction<CR>", opts)
 	keymap("n", "<leader>cr", "<cmd>RustLsp runnables<CR>", opts)
 	keymap("n", "<leader>ce", "<cmd>RustLsp expandMacro<CR>", opts)
+
+	-- Additional useful Rust keybindings
+	keymap("n", "<leader>cR", "<cmd>RustLsp debuggables<CR>", opts)
+	keymap("n", "<leader>cm", "<cmd>RustLsp parentModule<CR>", opts)
+	keymap("n", "<leader>cj", "<cmd>RustLsp joinLines<CR>", opts)
 end
 
 local get_codelldb_adapter = function()
@@ -34,6 +40,9 @@ M.config = function()
 			hover_actions = {
 				auto_focus = true,
 			},
+			code_actions = {
+				ui = "select", -- Use vim.ui.select for code actions
+			},
 		},
 		server = {
 			on_attach = on_attach,
@@ -42,9 +51,14 @@ M.config = function()
 					cargo = {
 						allFeatures = true,
 					},
-					-- checkOnSave = {
-					-- 	command = "clippy",
-					-- },
+					completion = {
+						callable = {
+							snippets = "fill_arguments",
+						},
+					},
+					checkOnSave = {
+						command = "clippy",
+					},
 				},
 			},
 		},
