@@ -32,6 +32,18 @@ return {
 
 		require("luasnip.loaders.from_vscode").lazy_load()
 
+		-- Load custom snippets
+		local custom_snippets_path = vim.fn.stdpath("config") .. "/lua/snippets"
+		if vim.fn.isdirectory(custom_snippets_path) == 1 then
+			for _, file in ipairs(vim.fn.glob(custom_snippets_path .. "/*.lua", false, true)) do
+				local lang = vim.fn.fnamemodify(file, ":t:r")
+				local snippets = dofile(file)
+				if type(snippets) == "table" then
+					require("luasnip").add_snippets(lang, snippets)
+				end
+			end
+		end
+
 		cmp.setup({
 			snippet = {
 				expand = function(args)

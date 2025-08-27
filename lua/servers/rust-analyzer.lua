@@ -56,9 +56,9 @@ M.config = function()
 							snippets = "fill_arguments",
 						},
 					},
-					checkOnSave = {
-						command = "clippy",
-					},
+					--checkOnSave = {
+					--command = "clippy",
+					--},
 				},
 			},
 		},
